@@ -43,7 +43,7 @@ class MainTest {
     }
 
     @Test
-    @DisplayName("Проверка метода поиска самого старого и нового автомобиля")
+    @DisplayName("Проверка метода, который выводит максимальную скорость автомобиля и особенность данной марки")
     void testFindOldAndNewCar() {
         assertDoesNotThrow(() -> Main.maxSpeedAndCarFeature(list));
     }
