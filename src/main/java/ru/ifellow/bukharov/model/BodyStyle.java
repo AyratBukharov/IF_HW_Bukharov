@@ -2,6 +2,9 @@ package ru.ifellow.bukharov.model;
 
 import lombok.RequiredArgsConstructor;
 
+/**
+ * Тип кузова автомобиля.
+ */
 @RequiredArgsConstructor
 public enum BodyStyle {
     SEDAN("Седан"),

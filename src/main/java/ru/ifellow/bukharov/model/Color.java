@@ -2,6 +2,9 @@ package ru.ifellow.bukharov.model;
 
 import lombok.RequiredArgsConstructor;
 
+/**
+ * Цвет автомобиля.
+ */
 @RequiredArgsConstructor
 public enum Color {
     BLACK("Чёрный"),
