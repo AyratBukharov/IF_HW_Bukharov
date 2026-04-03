@@ -2,7 +2,6 @@ package ru.ifellow.bukharov.ifellowEduJira.page;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
-import ru.ifellow.bukharov.config.ConfigReader;
 
 import static com.codeborne.selenide.Selenide.$x;
 
@@ -32,8 +31,11 @@ public class BrowsePage {
     private final SelenideElement version = $x("//span[@id='fixVersions-field']")
             .as("Исправить в версиях");
 
-    public BrowsePage findTestSelenium() {
-        search.shouldBe(Condition.visible).setValue(ConfigReader.get("taskSelenium"));
+    /**
+     * Метод поиска задач по названию (+сортировка по созданию)
+     */
+    public BrowsePage findTaskByName(String taskName) {
+        search.shouldBe(Condition.visible).setValue(taskName);
         searchButton.shouldBe(Condition.visible).click();
         sorted.shouldBe(Condition.visible).click();
         choseCreated.shouldBe(Condition.visible).click();
@@ -41,10 +43,16 @@ public class BrowsePage {
         return this;
     }
 
+    /**
+     * Возвращает статус выбранной задачи
+     */
     public String getStatus() {
         return status.shouldBe(Condition.visible).getText();
     }
 
+    /**
+     * Возвращает версию исправления задачи
+     */
     public String getVersion() {
         return version.shouldBe(Condition.visible).getText();
     }

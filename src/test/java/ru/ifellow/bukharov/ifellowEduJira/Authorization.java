@@ -1,6 +1,6 @@
 package ru.ifellow.bukharov.ifellowEduJira;
 
-import ru.ifellow.bukharov.config.ConfigReader;
+import ru.ifellow.bukharov.ifellowEduJira.config.ConfigReader;
 import ru.ifellow.bukharov.ifellowEduJira.page.AuthorizationPage;
 import ru.ifellow.bukharov.ifellowEduJira.page.DashboardPage;
 

@@ -1,4 +1,4 @@
-package ru.ifellow.bukharov.config;
+package ru.ifellow.bukharov.ifellowEduJira.config;
 
 import java.io.InputStream;
 import java.util.Properties;

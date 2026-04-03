@@ -22,21 +22,38 @@ public class DashboardPage {
     private final SelenideElement create = $x("//a[@id='create_link']")
             .as("Кнопка создания задачи");
 
+    /**
+     * Проверка, что страница открыта
+     *
+     * @return текущий объект страницы
+     */
     public DashboardPage shouldBeOpened() {
         profile.shouldBe(Condition.visible);
         return this;
     }
 
+    /**
+     * Проверяет факт открытия страницы.
+     *
+     * @return true, если страница отображается
+     */
     public boolean isOpened() {
         return profile.isDisplayed();
     }
 
+
+    /**
+     * Переход в проект 'Test'.
+     */
     public ProjectPage goToTest() {
         projects.shouldBe(Condition.visible).click();
         test.shouldBe(Condition.visible).click();
         return new ProjectPage().shouldBeOpened();
     }
 
+    /**
+     * Окно создания задачи
+     */
     public CreateProjectPage openCreateTask() {
         create.shouldBe(Condition.visible).click();
         return new CreateProjectPage();

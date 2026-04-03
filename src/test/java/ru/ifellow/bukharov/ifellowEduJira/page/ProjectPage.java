@@ -45,6 +45,9 @@ public class ProjectPage {
         return projectHeader.isDisplayed();
     }
 
+    /**
+     * Переход к списку всех задач
+     */
     public ProjectPage goToAllTasks() {
         switchFilter.shouldBe(Condition.visible).click();
         chooseAllTasks.shouldBe(Condition.visible).click();
@@ -52,23 +55,35 @@ public class ProjectPage {
         return this;
     }
 
+    /**
+     * Переход к расширенному поиску задач
+     */
     public BrowsePage goToAllTaskAndFilter() {
         allTasksAndFilter.shouldBe(Condition.visible).click();
         return new BrowsePage();
     }
 
+    /**
+     * Создание задачи через быстрый ввод
+     */
     public ProjectPage createTask() {
         createTaskButton.shouldBe(Condition.visible).click();
         summary.shouldBe(Condition.visible).setValue("что то должно быть сделано").pressEnter();
         return this;
     }
 
-    public int allTestsCounter() {
+    /**
+     * Возвращает общее количество задач в проекте
+     */
+    public int getTasksCount() {
         String text = taskCounter.shouldBe(Condition.visible).getText();
         String countInt = text.split("из")[1].trim();
         return Integer.parseInt(countInt);
     }
 
+    /**
+     * Ожидание изменения количества задач
+     */
     public ProjectPage waitTasksCount(int expectedCount) {
         taskCounter.shouldHave(
                 Condition.text(String.valueOf(expectedCount)),

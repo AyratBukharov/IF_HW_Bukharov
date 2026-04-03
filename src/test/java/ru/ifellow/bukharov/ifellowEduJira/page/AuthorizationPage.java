@@ -19,6 +19,9 @@ public class AuthorizationPage {
     private final SelenideElement button = $x("//input[@id='login']")
             .as("Вход в систему: кнопка 'Войти'");
 
+    /**
+     * Метод авторизации на сайте
+     */
     public DashboardPage authorization(String login, String password) {
         userLogin.shouldBe(Condition.visible).setValue(login);
         userPassword.shouldBe(Condition.visible).setValue(password);

@@ -103,7 +103,10 @@ public class CreateProjectPage {
     @Getter
     private String statusMyTask;
 
-    public CreateProjectPage createNewTask() {
+    /**
+     * Метод создания новой задачи(бага) с заполнением всех полей
+     */
+    public CreateProjectPage createTask() {
         project.shouldHave(Condition.value("test"), Duration.ofSeconds(15));
         typeTask.shouldHave(Condition.value("Ошибка"));
         topic.shouldBe(Condition.visible).setValue("Заполнил поле 'Тема'");
@@ -131,7 +134,10 @@ public class CreateProjectPage {
         return this;
     }
 
-    public CreateProjectPage doneNewTask() {
+    /**
+     * Метод закрытия бага(задачи): перевод задачи в статус - 'ГОТОВО'
+     */
+    public CreateProjectPage closeTask() {
         taskButton.shouldBe(Condition.visible).click();
         myOpenTasks.shouldBe(Condition.visible).click();
         businessProcess.shouldBe(Condition.visible).click();
@@ -140,7 +146,10 @@ public class CreateProjectPage {
         return this;
     }
 
-    public String isCreated() {
+    /**
+     * Метод проверки сообщения о создании задачи и извлечение её номера
+     */
+    public String getCreationMessage() {
         taskNumber = messageCreated.shouldBe(Condition.visible, Duration.ofSeconds(5))
                 .getText().split(" ")[1].trim();
         return messageCreated.shouldBe(Condition.visible, Duration.ofSeconds(5)).getText();
