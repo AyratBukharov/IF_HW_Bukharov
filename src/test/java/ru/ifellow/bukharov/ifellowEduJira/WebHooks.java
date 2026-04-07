@@ -19,7 +19,7 @@ public class WebHooks {
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--start-maximized");
         Configuration.browserCapabilities = options;
-        Selenide.open(ConfigReader.get("website"));
+        Selenide.open(ConfigReader.get("base.url"));
     }
 
     @AfterEach

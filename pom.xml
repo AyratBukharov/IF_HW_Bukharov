@@ -13,7 +13,6 @@
         <junit.version>5.13.4</junit.version>
         <selenium.version>4.41.0</selenium.version>
         <selenide.version>7.15.0</selenide.version>
-        <suite.version>1.13.4</suite.version>
     </properties>
 
     <dependencies>
@@ -42,13 +41,6 @@
             <artifactId>selenide</artifactId>
             <version>${selenide.version}</version>
             <scope>compile</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.junit.platform</groupId>
-            <artifactId>junit-platform-suite</artifactId>
-            <version>${suite.version}</version>
-            <scope>test</scope>
         </dependency>
     </dependencies>
 

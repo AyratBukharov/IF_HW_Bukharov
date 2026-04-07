@@ -8,7 +8,7 @@ import static com.codeborne.selenide.Selenide.$x;
 /**
  * Страница авторизации
  */
-public class AuthorizationPage {
+public class AuthenticationPage {
 
     private final SelenideElement userLogin = $x("//input[@id='login-form-username']")
             .as("Вход в систему: поле 'Имя пользователя'");
@@ -22,7 +22,7 @@ public class AuthorizationPage {
     /**
      * Метод авторизации на сайте
      */
-    public DashboardPage authorization(String login, String password) {
+    public DashboardPage authentication(String login, String password) {
         userLogin.shouldBe(Condition.visible).setValue(login);
         userPassword.shouldBe(Condition.visible).setValue(password);
         button.shouldBe(Condition.enabled).click();
