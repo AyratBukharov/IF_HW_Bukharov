@@ -1,16 +1,21 @@
-package ru.ifellow.bukharov.ifellowEduJira;
+package ru.ifellow.bukharov.ifellowEduJira.hooks;
 
 import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.Selenide;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
+import io.cucumber.java.After;
+import io.cucumber.java.Before;
+import org.aeonbits.owner.ConfigFactory;
 import org.openqa.selenium.PageLoadStrategy;
 import org.openqa.selenium.chrome.ChromeOptions;
-import ru.ifellow.bukharov.ifellowEduJira.config.ConfigReader;
+import ru.ifellow.bukharov.ifellowEduJira.config.TestConfig;
 
-public class WebHooks {
+import static com.codeborne.selenide.Selenide.open;
 
-    @BeforeEach
+public class Hooks {
+
+    private final TestConfig config = ConfigFactory.create(TestConfig.class);
+
+    @Before()
     public void initBrowser() {
         Configuration.pageLoadStrategy = PageLoadStrategy.EAGER.toString();
         Configuration.browser = "chrome";
@@ -19,10 +24,10 @@ public class WebHooks {
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--start-maximized");
         Configuration.browserCapabilities = options;
-        Selenide.open(ConfigReader.get("base.url"));
+        open(config.baseUrl());
     }
 
-    @AfterEach
+    @After
     public void afterTest() {
         Selenide.closeWebDriver();
     }

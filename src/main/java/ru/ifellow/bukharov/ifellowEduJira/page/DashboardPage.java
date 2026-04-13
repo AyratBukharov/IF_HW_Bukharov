@@ -4,6 +4,7 @@ import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 
 import static com.codeborne.selenide.Selenide.$x;
+import static com.codeborne.selenide.Selenide.page;
 
 /**
  * Страница рабочего стола
@@ -48,14 +49,14 @@ public class DashboardPage {
     public ProjectPage goToTest() {
         projects.shouldBe(Condition.visible).click();
         test.shouldBe(Condition.visible).click();
-        return new ProjectPage().shouldBeOpened();
+        return page(ProjectPage.class).shouldBeOpened();
     }
 
     /**
      * Окно создания задачи
      */
-    public CreateProjectPage openCreateTask() {
+    public CreateTaskPage openCreateTask() {
         create.shouldBe(Condition.visible).click();
-        return new CreateProjectPage();
+        return page(CreateTaskPage.class);
     }
 }

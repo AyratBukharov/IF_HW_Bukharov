@@ -1,0 +1,18 @@
+package ru.ifellow.bukharov.ifellowEduJira;
+
+import org.junit.platform.suite.api.ConfigurationParameter;
+import org.junit.platform.suite.api.IncludeEngines;
+import org.junit.platform.suite.api.SelectClasspathResource;
+import org.junit.platform.suite.api.Suite;
+
+import static io.cucumber.junit.platform.engine.Constants.*;
+
+@Suite
+@IncludeEngines("cucumber")
+@SelectClasspathResource("features")
+@ConfigurationParameter(key = PLUGIN_PROPERTY_NAME, value = "pretty")
+@ConfigurationParameter(key = GLUE_PROPERTY_NAME, value = "ru.ifellow.bukharov.ifellowEduJira")
+@ConfigurationParameter(key = OBJECT_FACTORY_PROPERTY_NAME, value = "io.cucumber.picocontainer.PicoFactory")
+@ConfigurationParameter(key = FILTER_TAGS_PROPERTY_NAME, value = "@dz4")
+public class CucumberRunnerTest {
+}

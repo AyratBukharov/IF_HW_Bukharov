@@ -12,7 +12,7 @@ import static com.codeborne.selenide.Selenide.switchTo;
 /**
  * Окно создания задачи
  */
-public class CreateProjectPage {
+public class CreateTaskPage {
 
     private final SelenideElement project = $x("//input[@id='project-field']")
             .as("Поле 'Проект'");
@@ -106,7 +106,7 @@ public class CreateProjectPage {
     /**
      * Метод создания новой задачи(бага) с заполнением всех полей
      */
-    public CreateProjectPage createTask() {
+    public CreateTaskPage createTask() {
         project.shouldHave(Condition.value("test"), Duration.ofSeconds(15));
         typeTask.shouldHave(Condition.value("Ошибка"));
         topic.shouldBe(Condition.visible).setValue("Заполнил поле 'Тема'");
@@ -137,13 +137,12 @@ public class CreateProjectPage {
     /**
      * Метод закрытия бага(задачи): перевод задачи в статус - 'ГОТОВО'
      */
-    public CreateProjectPage closeTask() {
+    public void closeTask() {
         taskButton.shouldBe(Condition.visible).click();
         myOpenTasks.shouldBe(Condition.visible).click();
         businessProcess.shouldBe(Condition.visible).click();
         doneButton.shouldBe(Condition.visible).click();
         statusMyTask = status.shouldHave(Condition.text("готово"), Duration.ofSeconds(10)).getText();
-        return this;
     }
 
     /**

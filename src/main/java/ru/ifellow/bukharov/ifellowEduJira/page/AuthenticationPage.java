@@ -4,6 +4,7 @@ import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 
 import static com.codeborne.selenide.Selenide.$x;
+import static com.codeborne.selenide.Selenide.page;
 
 /**
  * Страница авторизации
@@ -26,6 +27,6 @@ public class AuthenticationPage {
         userLogin.shouldBe(Condition.visible).setValue(login);
         userPassword.shouldBe(Condition.visible).setValue(password);
         button.shouldBe(Condition.enabled).click();
-        return new DashboardPage().shouldBeOpened();
+        return page(DashboardPage.class).shouldBeOpened();
     }
 }

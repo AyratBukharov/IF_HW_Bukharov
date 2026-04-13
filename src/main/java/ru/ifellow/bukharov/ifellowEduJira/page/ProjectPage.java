@@ -6,6 +6,7 @@ import com.codeborne.selenide.SelenideElement;
 import java.time.Duration;
 
 import static com.codeborne.selenide.Selenide.$x;
+import static com.codeborne.selenide.Selenide.page;
 
 /**
  * Страница задач
@@ -36,6 +37,9 @@ public class ProjectPage {
     private final SelenideElement allTasksTitle = $x("//span[@id='issues-subnavigation-title']")
             .as("Текст 'Все задачи'");
 
+    private final SelenideElement testingCoverage = $x("//div[@class='css-8dom0t-EmptySection erc8m750']")
+            .as("Поле 'Покрытие тестирования'");
+
     public ProjectPage shouldBeOpened() {
         projectHeader.shouldBe(Condition.visible);
         return this;
@@ -52,6 +56,7 @@ public class ProjectPage {
         switchFilter.shouldBe(Condition.visible).click();
         chooseAllTasks.shouldBe(Condition.visible).click();
         allTasksTitle.shouldBe(Condition.visible).shouldHave(Condition.textCaseSensitive("Все задачи"));
+        testingCoverage.shouldBe(Condition.visible, Duration.ofSeconds(10));
         return this;
     }
 
@@ -60,16 +65,15 @@ public class ProjectPage {
      */
     public BrowsePage goToAllTaskAndFilter() {
         allTasksAndFilter.shouldBe(Condition.visible).click();
-        return new BrowsePage();
+        return page(BrowsePage.class);
     }
 
     /**
      * Создание задачи через быстрый ввод
      */
-    public ProjectPage createTask() {
+    public void createTask() {
         createTaskButton.shouldBe(Condition.visible).click();
         summary.shouldBe(Condition.visible).setValue("что то должно быть сделано").pressEnter();
-        return this;
     }
 
     /**
@@ -84,11 +88,10 @@ public class ProjectPage {
     /**
      * Ожидание изменения количества задач
      */
-    public ProjectPage waitTasksCount(int expectedCount) {
+    public void waitTasksCount(int expectedCount) {
         taskCounter.shouldHave(
-                Condition.text(String.valueOf(expectedCount)),
-                Duration.ofSeconds(10)
+                Condition.matchText("из " + expectedCount),
+                Duration.ofSeconds(15)
         );
-        return this;
     }
 }
