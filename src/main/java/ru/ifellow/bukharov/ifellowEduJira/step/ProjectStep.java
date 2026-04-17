@@ -4,47 +4,44 @@ import io.cucumber.java.ru.Когда;
 import io.cucumber.java.ru.Тогда;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Assertions;
-import ru.ifellow.bukharov.ifellowEduJira.context.Context;
+import ru.ifellow.bukharov.ifellowEduJira.page.DashboardPage;
 import ru.ifellow.bukharov.ifellowEduJira.page.ProjectPage;
 
 @RequiredArgsConstructor
 public class ProjectStep {
 
-    private final Context context;
+    private ProjectPage projectPage;
+    private int countBefore;
 
     @Когда("открываем проекты")
     public void openProject() {
-        ProjectPage projectPage = context.getDashboardPage().goToTest();
-        context.setProjectPage(projectPage);
+        projectPage = new DashboardPage().goToTest();
     }
 
     @Тогда("открывается страница проектов")
     public void checkProjectOpened() {
-        Assertions.assertTrue(context.getProjectPage().isOpened());
+        Assertions.assertTrue(projectPage.isOpened());
     }
 
     @Когда("переходим в список всех задач")
     public void goToTasks() {
-        ProjectPage projectPage = context.getProjectPage().goToAllTasks();
-        context.setProjectPage(projectPage);
+        projectPage = projectPage.goToAllTasks();
     }
 
     @Тогда("записываем количество всех задач")
     public void taskCount() {
-        int count = context.getProjectPage().getTasksCount();
-        context.setTasksCountBefore(count);
+        countBefore = projectPage.getTasksCount();
     }
 
     @Когда("создаём задачу")
     public void createTask() {
-        context.getProjectPage().createTask();
+        projectPage.createTask();
     }
 
     @Тогда("количество задач увеличивается на 1")
     public void checkTasksCount() {
-        int expected = context.getTasksCountBefore() + 1;
-        context.getProjectPage().waitTasksCount(expected);
-        int actual = context.getProjectPage().getTasksCount();
-        Assertions.assertEquals(expected, actual);
+        projectPage.waitTasksCount(countBefore + 1);
+        int countAfter = projectPage.getTasksCount();
+        Assertions.assertEquals(countBefore + 1, countAfter);
     }
 }
