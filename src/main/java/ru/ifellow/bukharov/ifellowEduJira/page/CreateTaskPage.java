@@ -107,30 +107,20 @@ public class CreateTaskPage {
      * Метод создания новой задачи(бага) с заполнением всех полей
      */
     public CreateTaskPage createTask() {
-        project.shouldHave(Condition.value("test"), Duration.ofSeconds(15));
-        typeTask.shouldHave(Condition.value("Ошибка"));
-        topic.shouldBe(Condition.visible).setValue("Заполнил поле 'Тема'");
-        visualDescription.click();
-        switchTo().frame(description);
-        bodyInDescription.shouldBe(Condition.visible).setValue("Заполнил поле 'Описание'");
-        switchTo().defaultContent();
-        version.shouldBe(Condition.visible).click();
-        priority.shouldHave(Condition.value("Medium"));
-        tags.shouldBe(Condition.visible).setValue("Заполнил поле 'Метки'");
-        visualEnvironment.shouldBe(Condition.visible).click();
-        switchTo().frame(environment);
-        bodyInEnvironment.shouldBe(Condition.visible).setValue("Заполнил поле 'Окружение'");
-        switchTo().defaultContent();
-        useVersion.shouldBe(Condition.visible).click();
-        relatedTask.shouldHave(Condition.value("blocks"));
-        task.shouldBe(Condition.visible).shouldBe(Condition.empty);
-        executor.shouldHave(Condition.value("Автоматически"));
-        selectMeExecutor.shouldBe(Condition.visible).click();
-        epic.shouldBe(Condition.visible).shouldBe(Condition.empty);
-        sprint.shouldBe(Condition.visible).shouldBe(Condition.empty);
-        seriousness.shouldBe(Condition.visible).click();
-        createButton.shouldBe(Condition.visible).click();
-        message.shouldBe(Condition.visible);
+        checkDefaultValues();
+        fillSummary();
+        fillDescription();
+        selectFixVersion();
+        fillTags();
+        fillEnvironment();
+        selectAffectsVersion();
+        checkRelatedTask();
+        assignExecutor();
+        checkEpicAndSprint();
+        selectSeriousness();
+        submitTask();
+        verifyCreation();
+
         return this;
     }
 
@@ -152,5 +142,77 @@ public class CreateTaskPage {
         taskNumber = messageCreated.shouldBe(Condition.visible, Duration.ofSeconds(5))
                 .getText().split(" ")[1].trim();
         return messageCreated.shouldBe(Condition.visible, Duration.ofSeconds(5)).getText();
+    }
+
+    private void checkDefaultValues() {
+        project.shouldHave(Condition.value("test"), Duration.ofSeconds(15));
+        typeTask.shouldHave(Condition.value("Ошибка"));
+        priority.shouldHave(Condition.value("Medium"));
+    }
+
+    private void fillSummary() {
+        topic.shouldBe(Condition.visible)
+                .setValue("Заполнил поле 'Тема'");
+    }
+
+    private void fillDescription() {
+        visualDescription.click();
+        switchTo().frame(description);
+
+        bodyInDescription.shouldBe(Condition.visible)
+                .setValue("Заполнил поле 'Описание'");
+
+        switchTo().defaultContent();
+    }
+
+    private void selectFixVersion() {
+        version.shouldBe(Condition.visible).click();
+    }
+
+    private void fillTags() {
+        tags.shouldBe(Condition.visible)
+                .setValue("Заполнил поле 'Метки'");
+    }
+
+    private void fillEnvironment() {
+        visualEnvironment.shouldBe(Condition.visible).click();
+        switchTo().frame(environment);
+
+        bodyInEnvironment.shouldBe(Condition.visible)
+                .setValue("Заполнил поле 'Окружение'");
+
+        switchTo().defaultContent();
+    }
+
+    private void selectAffectsVersion() {
+        useVersion.shouldBe(Condition.visible).click();
+    }
+
+    private void checkRelatedTask() {
+        relatedTask.shouldHave(Condition.value("blocks"));
+        task.shouldBe(Condition.visible)
+                .shouldBe(Condition.empty);
+    }
+
+    private void assignExecutor() {
+        executor.shouldHave(Condition.value("Автоматически"));
+        selectMeExecutor.shouldBe(Condition.visible).click();
+    }
+
+    private void checkEpicAndSprint() {
+        epic.shouldBe(Condition.visible).shouldBe(Condition.empty);
+        sprint.shouldBe(Condition.visible).shouldBe(Condition.empty);
+    }
+
+    private void selectSeriousness() {
+        seriousness.shouldBe(Condition.visible).click();
+    }
+
+    private void submitTask() {
+        createButton.shouldBe(Condition.visible).click();
+    }
+
+    private void verifyCreation() {
+        message.shouldBe(Condition.visible);
     }
 }
