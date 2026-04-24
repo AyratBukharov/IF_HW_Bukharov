@@ -1,0 +1,8 @@
+target/
+.allure/
+.idea/
+.build/
+.DS_Store
+Thumbs.db
+*.iml
+*.log

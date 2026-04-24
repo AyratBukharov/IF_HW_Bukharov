@@ -1,32 +1,33 @@
 package ru.ifellow.bukharov.ifellowEduJira.pageTest;
 
+import io.qameta.allure.Feature;
+import io.qameta.allure.Severity;
+import io.qameta.allure.SeverityLevel;
+import io.qameta.allure.Story;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import ru.ifellow.bukharov.ifellowEduJira.Authentication;
-import ru.ifellow.bukharov.ifellowEduJira.WebHooks;
-import ru.ifellow.bukharov.ifellowEduJira.page.BrowsePage;
+import ru.ifellow.bukharov.ifellowEduJira.step.BrowseSteps;
 
-public class BrowsePageTest extends WebHooks {
+import static ru.ifellow.bukharov.ifellowEduJira.enums.TaskStatus.IN_PROGRESS;
+import static ru.ifellow.bukharov.ifellowEduJira.enums.TaskVersion.VERSION_2;
 
-    private final Authentication authentication = new Authentication();
-    private final static String STATUS = "сделать";
-    private final static String VERSION = "version 2.0";
-    private final static String TASK_NAME = "TestSeleniumATHomework";
+@Feature("Просмотр задач")
+public class BrowsePageTest extends EduJiraBaseTest {
 
     @Test
+    @Story("Поиск задачи по имени и проверка её статуса и версии исправления")
+    @Severity(SeverityLevel.NORMAL)
     @DisplayName("4. Переход в задачу TestSeleniumATHomework и проверка статуса и версии")
-    @Tag("DZ3")
     public void checkTask() {
-        BrowsePage browsePage = authentication.login()
-                .goToTest()
-                .goToAllTaskAndFilter()
-                .findTaskByName(TASK_NAME);
+        BrowseSteps browseSteps = dashboardSteps
+                .goToTestProject()
+                .goToAdvancedSearch()
+                .findTaskByName(config.taskName());
 
-        Assertions.assertEquals(STATUS, browsePage.getStatus().toLowerCase(),
+        Assertions.assertEquals(IN_PROGRESS.getValue(), browseSteps.getStatus().toLowerCase(),
                 "Статус задачи неверный");
-        Assertions.assertEquals(VERSION, browsePage.getVersion().toLowerCase(),
+        Assertions.assertEquals(VERSION_2.getValue(), browseSteps.getVersion().toLowerCase(),
                 "Исправить в версиях неверно");
     }
 }

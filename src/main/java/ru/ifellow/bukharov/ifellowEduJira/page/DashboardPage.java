@@ -5,9 +5,6 @@ import com.codeborne.selenide.SelenideElement;
 
 import static com.codeborne.selenide.Selenide.$x;
 
-/**
- * Страница рабочего стола
- */
 public class DashboardPage {
 
     private final SelenideElement profile = $x("//span[@class='aui-avatar aui-avatar-small']")
@@ -19,43 +16,24 @@ public class DashboardPage {
     private final SelenideElement test = $x("//a[@id='admin_main_proj_link_lnk']")
             .as("Текущие проекты: Test (TEST)");
 
-    private final SelenideElement create = $x("//a[@id='create_link']")
+    private final SelenideElement createButton = $x("//a[@id='create_link']")
             .as("Кнопка создания задачи");
 
-    /**
-     * Проверка, что страница открыта
-     *
-     * @return текущий объект страницы
-     */
-    public DashboardPage shouldBeOpened() {
+    public boolean isProfileDisplayed() {
         profile.shouldBe(Condition.visible);
-        return this;
-    }
-
-    /**
-     * Проверяет факт открытия страницы.
-     *
-     * @return true, если страница отображается
-     */
-    public boolean isOpened() {
         return profile.isDisplayed();
     }
 
-
-    /**
-     * Переход в проект 'Test'.
-     */
-    public ProjectPage goToTest() {
+    public DashboardPage clickProjects() {
         projects.shouldBe(Condition.visible).click();
-        test.shouldBe(Condition.visible).click();
-        return new ProjectPage().shouldBeOpened();
+        return this;
     }
 
-    /**
-     * Окно создания задачи
-     */
-    public CreateProjectPage openCreateTask() {
-        create.shouldBe(Condition.visible).click();
-        return new CreateProjectPage();
+    public void clickTestProject() {
+        test.shouldBe(Condition.visible).click();
+    }
+
+    public void clickCreateTask() {
+        createButton.shouldBe(Condition.visible).click();
     }
 }

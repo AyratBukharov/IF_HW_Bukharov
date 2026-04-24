@@ -5,9 +5,6 @@ import com.codeborne.selenide.SelenideElement;
 
 import static com.codeborne.selenide.Selenide.$x;
 
-/**
- * Страница просмотра, поиска и фильтрации всех задач
- */
 public class BrowsePage {
 
     private final SelenideElement search = $x("//input[@class='search-entry text medium-field ajs-dirty-warning-exempt']")
@@ -31,28 +28,34 @@ public class BrowsePage {
     private final SelenideElement version = $x("//span[@id='fixVersions-field']")
             .as("Исправить в версиях");
 
-    /**
-     * Метод поиска задач по названию (+сортировка по созданию)
-     */
-    public BrowsePage findTaskByName(String taskName) {
-        search.shouldBe(Condition.visible).setValue(taskName);
-        searchButton.shouldBe(Condition.visible).click();
-        sorted.shouldBe(Condition.visible).click();
-        choseCreated.shouldBe(Condition.visible).click();
-        sortedOldButton.shouldBe(Condition.visible).click();
+    public BrowsePage inputSearchText(String searchText) {
+        search.shouldBe(Condition.visible).setValue(searchText);
         return this;
     }
 
-    /**
-     * Возвращает статус выбранной задачи
-     */
+    public BrowsePage clickSearchButton() {
+        searchButton.shouldBe(Condition.visible).click();
+        return this;
+    }
+
+    public BrowsePage openOrderByDropdown() {
+        sorted.shouldBe(Condition.visible).click();
+        return this;
+    }
+
+    public BrowsePage selectCreatedFilter() {
+        choseCreated.shouldBe(Condition.visible).click();
+        return this;
+    }
+
+    public void clickOrderByCreated() {
+        sortedOldButton.shouldBe(Condition.visible).click();
+    }
+
     public String getStatus() {
         return status.shouldBe(Condition.visible).getText();
     }
 
-    /**
-     * Возвращает версию исправления задачи
-     */
     public String getVersion() {
         return version.shouldBe(Condition.visible).getText();
     }

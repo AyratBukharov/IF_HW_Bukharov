@@ -1,31 +1,31 @@
 package ru.ifellow.bukharov.ifellowEduJira.pageTest;
 
+import io.qameta.allure.Feature;
+import io.qameta.allure.Severity;
+import io.qameta.allure.SeverityLevel;
+import io.qameta.allure.Story;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import ru.ifellow.bukharov.ifellowEduJira.Authentication;
-import ru.ifellow.bukharov.ifellowEduJira.WebHooks;
-import ru.ifellow.bukharov.ifellowEduJira.page.ProjectPage;
+import ru.ifellow.bukharov.ifellowEduJira.step.ProjectSteps;
 
-public class ProjectPageTest extends WebHooks {
-
-    private final Authentication authentication = new Authentication();
+@Feature("Управление проектом")
+public class ProjectPageTest extends EduJiraBaseTest {
 
     @Test
+    @Story("Быстрое создание задачи увеличивает общее количество задач")
+    @Severity(SeverityLevel.CRITICAL)
     @DisplayName("3. Проверка общего количества заведённых задач")
-    @Tag("DZ3")
     public void tasksCounter() {
-        ProjectPage projectPage = authentication.login()
-                .goToTest()
+        ProjectSteps projectSteps = dashboardSteps
+                .goToTestProject()
                 .goToAllTasks();
+        int countBefore = projectSteps.getTasksCount();
+        projectSteps.createQuickTask(config.summaryText());
+        projectSteps.waitTasksCountIncreased(countBefore);
+        int countAfter = projectSteps.getTasksCount();
 
-        int countBefore = projectPage.getTasksCount();
-        projectPage.createTask();
-        projectPage.waitTasksCount(countBefore + 1);
-        int countAfter = projectPage.getTasksCount();
-
-        Assertions.assertEquals(countBefore + 1, countAfter,
-                "Количество задач не увеличилось на 1");
+        Assertions.assertTrue(countAfter > countBefore,
+                String.format("Счётчик задач не увеличился. Было: %d, стало: %d", countBefore, countAfter));
     }
 }

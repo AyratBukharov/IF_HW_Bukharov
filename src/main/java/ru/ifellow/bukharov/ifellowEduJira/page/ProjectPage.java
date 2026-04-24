@@ -3,13 +3,8 @@ package ru.ifellow.bukharov.ifellowEduJira.page;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 
-import java.time.Duration;
-
 import static com.codeborne.selenide.Selenide.$x;
 
-/**
- * Страница задач
- */
 public class ProjectPage {
 
     private final SelenideElement projectHeader = $x("//header[@class='aui-page-header issue-search-header']")
@@ -36,59 +31,65 @@ public class ProjectPage {
     private final SelenideElement allTasksTitle = $x("//span[@id='issues-subnavigation-title']")
             .as("Текст 'Все задачи'");
 
-    public ProjectPage shouldBeOpened() {
-        projectHeader.shouldBe(Condition.visible);
-        return this;
-    }
+    private final SelenideElement testingCoverage = $x("//div[@class='css-8dom0t-EmptySection erc8m750']")
+            .as("Поле 'Покрытие тестирования'");
 
-    public boolean isOpened() {
+    private static final String ALL_TASK_TEXT = "Все задачи";
+    private static final String TASK_COUNT_DELIMITER = "из ";
+
+    public boolean isProjectHeaderDisplayed() {
         return projectHeader.isDisplayed();
     }
 
-    /**
-     * Переход к списку всех задач
-     */
-    public ProjectPage goToAllTasks() {
+    public ProjectPage clickSwitchFilter() {
         switchFilter.shouldBe(Condition.visible).click();
+        return this;
+    }
+
+    public ProjectPage clickChooseAllTasks() {
         chooseAllTasks.shouldBe(Condition.visible).click();
-        allTasksTitle.shouldBe(Condition.visible).shouldHave(Condition.textCaseSensitive("Все задачи"));
         return this;
     }
 
-    /**
-     * Переход к расширенному поиску задач
-     */
-    public BrowsePage goToAllTaskAndFilter() {
+    public ProjectPage waitAllTasksTitle() {
+        allTasksTitle.shouldBe(Condition.visible).shouldHave(Condition.textCaseSensitive(ALL_TASK_TEXT));
+        return this;
+    }
+
+    public ProjectPage waitTestingCoverage() {
+        testingCoverage.shouldBe(Condition.visible);
+        return this;
+    }
+
+    public void clickAllTasksAndFilter() {
         allTasksAndFilter.shouldBe(Condition.visible).click();
-        return new BrowsePage();
     }
 
-    /**
-     * Создание задачи через быстрый ввод
-     */
-    public ProjectPage createTask() {
+    public ProjectPage clickCreateTaskQuick() {
         createTaskButton.shouldBe(Condition.visible).click();
-        summary.shouldBe(Condition.visible).setValue("что то должно быть сделано").pressEnter();
         return this;
     }
 
-    /**
-     * Возвращает общее количество задач в проекте
-     */
+    public ProjectPage setSummary(String summaryText) {
+        this.summary.shouldBe(Condition.visible).setValue(summaryText);
+        return this;
+    }
+
+    public void pressEnter() {
+        summary.pressEnter();
+    }
+
     public int getTasksCount() {
         String text = taskCounter.shouldBe(Condition.visible).getText();
-        String countInt = text.split("из")[1].trim();
+        String countInt = text.split(TASK_COUNT_DELIMITER)[1].trim();
         return Integer.parseInt(countInt);
     }
 
-    /**
-     * Ожидание изменения количества задач
-     */
-    public ProjectPage waitTasksCount(int expectedCount) {
-        taskCounter.shouldHave(
-                Condition.text(String.valueOf(expectedCount)),
-                Duration.ofSeconds(10)
-        );
-        return this;
+    public String getTaskCounterText() {
+        return taskCounter.shouldBe(Condition.visible).getText();
+    }
+
+    public void waitForTaskCounterChanged(String oldText) {
+        taskCounter.shouldNot(Condition.exactText(oldText));
     }
 }

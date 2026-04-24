@@ -4,10 +4,8 @@ import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 
 import static com.codeborne.selenide.Selenide.$x;
+import static com.codeborne.selenide.SetValueOptions.withText;
 
-/**
- * Страница авторизации
- */
 public class AuthenticationPage {
 
     private final SelenideElement userLogin = $x("//input[@id='login-form-username']")
@@ -19,13 +17,17 @@ public class AuthenticationPage {
     private final SelenideElement button = $x("//input[@id='login']")
             .as("Вход в систему: кнопка 'Войти'");
 
-    /**
-     * Метод авторизации на сайте
-     */
-    public DashboardPage authentication(String login, String password) {
+    public AuthenticationPage setLogin(String login) {
         userLogin.shouldBe(Condition.visible).setValue(login);
-        userPassword.shouldBe(Condition.visible).setValue(password);
+        return this;
+    }
+
+    public AuthenticationPage setPassword(String password) {
+        userPassword.shouldBe(Condition.visible).setValue(withText(password).sensitive());
+        return this;
+    }
+
+    public void clickLoginButton() {
         button.shouldBe(Condition.enabled).click();
-        return new DashboardPage().shouldBeOpened();
     }
 }

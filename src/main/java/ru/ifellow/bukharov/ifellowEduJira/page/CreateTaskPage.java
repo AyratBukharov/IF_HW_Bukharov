@@ -2,17 +2,11 @@ package ru.ifellow.bukharov.ifellowEduJira.page;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
-import lombok.Getter;
-
-import java.time.Duration;
 
 import static com.codeborne.selenide.Selenide.$x;
 import static com.codeborne.selenide.Selenide.switchTo;
 
-/**
- * Окно создания задачи
- */
-public class CreateProjectPage {
+public class CreateTaskPage {
 
     private final SelenideElement project = $x("//input[@id='project-field']")
             .as("Поле 'Проект'");
@@ -98,60 +92,98 @@ public class CreateProjectPage {
     private final SelenideElement myOpenTasks = $x("//a[@id='filter_lnk_my_lnk']")
             .as("мои открытые задачи");
 
-    @Getter
-    private String taskNumber;
-    @Getter
-    private String statusMyTask;
+    public void waitFormOpened() {
+        topic.shouldBe(Condition.visible);
+    }
 
-    /**
-     * Метод создания новой задачи(бага) с заполнением всех полей
-     */
-    public CreateProjectPage createTask() {
-        project.shouldHave(Condition.value("test"), Duration.ofSeconds(15));
-        typeTask.shouldHave(Condition.value("Ошибка"));
-        topic.shouldBe(Condition.visible).setValue("Заполнил поле 'Тема'");
+    public void setTopic(String topicText) {
+        topic.shouldBe(Condition.visible).setValue(topicText);
+    }
+
+    public void selectFixVersion() {
+        version.shouldBe(Condition.visible).click();
+    }
+
+    public void setTags(String tagsText) {
+        tags.shouldBe(Condition.visible).setValue(tagsText);
+    }
+
+    public void fillDescriptionWithText(String descriptionText) {
         visualDescription.click();
         switchTo().frame(description);
-        bodyInDescription.shouldBe(Condition.visible).setValue("Заполнил поле 'Описание'");
+        bodyInDescription.shouldBe(Condition.visible).setValue(descriptionText);
         switchTo().defaultContent();
-        version.shouldBe(Condition.visible).click();
-        priority.shouldHave(Condition.value("Medium"));
-        tags.shouldBe(Condition.visible).setValue("Заполнил поле 'Метки'");
-        visualEnvironment.shouldBe(Condition.visible).click();
+    }
+
+    public void fillEnvironmentWithText(String environmentText) {
+        visualEnvironment.click();
         switchTo().frame(environment);
-        bodyInEnvironment.shouldBe(Condition.visible).setValue("Заполнил поле 'Окружение'");
+        bodyInEnvironment.shouldBe(Condition.visible).setValue(environmentText);
         switchTo().defaultContent();
+    }
+
+    public void selectAffectsVersion() {
         useVersion.shouldBe(Condition.visible).click();
-        relatedTask.shouldHave(Condition.value("blocks"));
-        task.shouldBe(Condition.visible).shouldBe(Condition.empty);
-        executor.shouldHave(Condition.value("Автоматически"));
-        selectMeExecutor.shouldBe(Condition.visible).click();
-        epic.shouldBe(Condition.visible).shouldBe(Condition.empty);
-        sprint.shouldBe(Condition.visible).shouldBe(Condition.empty);
+    }
+
+    public void selectSeriousness() {
         seriousness.shouldBe(Condition.visible).click();
+    }
+
+    public void clickCreateButton() {
         createButton.shouldBe(Condition.visible).click();
-        message.shouldBe(Condition.visible);
-        return this;
     }
 
-    /**
-     * Метод закрытия бага(задачи): перевод задачи в статус - 'ГОТОВО'
-     */
-    public CreateProjectPage closeTask() {
+    public String getCreationMessageText() {
+        return messageCreated.shouldBe(Condition.visible).getText();
+    }
+
+    public CreateTaskPage clickTasksMenu() {
         taskButton.shouldBe(Condition.visible).click();
-        myOpenTasks.shouldBe(Condition.visible).click();
-        businessProcess.shouldBe(Condition.visible).click();
-        doneButton.shouldBe(Condition.visible).click();
-        statusMyTask = status.shouldHave(Condition.text("готово"), Duration.ofSeconds(10)).getText();
         return this;
     }
 
-    /**
-     * Метод проверки сообщения о создании задачи и извлечение её номера
-     */
-    public String getCreationMessage() {
-        taskNumber = messageCreated.shouldBe(Condition.visible, Duration.ofSeconds(5))
-                .getText().split(" ")[1].trim();
-        return messageCreated.shouldBe(Condition.visible, Duration.ofSeconds(5)).getText();
+    public CreateTaskPage clickMyOpenTasks() {
+        myOpenTasks.shouldBe(Condition.visible).click();
+        return this;
+    }
+
+    public CreateTaskPage clickBusinessProcess() {
+        businessProcess.shouldBe(Condition.visible).click();
+        return this;
+    }
+
+    public CreateTaskPage clickDone() {
+        doneButton.shouldBe(Condition.visible).click();
+        return this;
+    }
+
+    public void checkDefaultValues(String projectText, String typeTaskText, String priorityText) {
+        project.shouldHave(Condition.value(projectText));
+        typeTask.shouldHave(Condition.value(typeTaskText));
+        priority.shouldHave(Condition.value(priorityText));
+    }
+
+    public void checkRelatedTask(String relatedTaskText) {
+        relatedTask.shouldHave(Condition.value(relatedTaskText));
+        task.shouldBe(Condition.empty);
+    }
+
+    public void assignExecutorWithCheck(String executorText) {
+        executor.shouldHave(Condition.value(executorText));
+        selectMeExecutor.shouldBe(Condition.visible).click();
+    }
+
+    public void checkEpicAndSprint() {
+        epic.shouldBe(Condition.empty);
+        sprint.shouldBe(Condition.empty);
+    }
+
+    public void verifyCreation() {
+        message.shouldBe(Condition.visible);
+    }
+
+    public String getStatusText(String expectedStatus) {
+        return status.shouldHave(Condition.text(expectedStatus)).getText();
     }
 }

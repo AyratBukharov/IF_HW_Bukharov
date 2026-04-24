@@ -1,24 +1,25 @@
 package ru.ifellow.bukharov.ifellowEduJira.pageTest;
 
+import io.qameta.allure.Feature;
+import io.qameta.allure.Severity;
+import io.qameta.allure.SeverityLevel;
+import io.qameta.allure.Story;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import ru.ifellow.bukharov.ifellowEduJira.Authentication;
-import ru.ifellow.bukharov.ifellowEduJira.WebHooks;
-import ru.ifellow.bukharov.ifellowEduJira.page.ProjectPage;
+import ru.ifellow.bukharov.ifellowEduJira.step.ProjectSteps;
 
-public class DashboardPageTest extends WebHooks {
-
-    private final Authentication authentication = new Authentication();
+@Feature("Панель управления")
+public class DashboardPageTest extends EduJiraBaseTest {
 
     @Test
+    @Story("Переход в проект 'Test' с главной панели")
+    @Severity(SeverityLevel.NORMAL)
     @DisplayName("2. Переход в проект 'Test'")
-    @Tag("DZ3")
     public void goToTest() {
-        ProjectPage projectPage = authentication.login()
-                .goToTest();
+        ProjectSteps projectSteps = dashboardSteps
+                .goToTestProject();
 
-        Assertions.assertTrue(projectPage.isOpened(), "Проект 'Test' не открылся");
+        Assertions.assertTrue(projectSteps.isOpened(), "Проект 'Test' не открылся");
     }
 }
