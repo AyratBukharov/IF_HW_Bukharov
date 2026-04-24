@@ -17,15 +17,7 @@ public class Specification {
                 .build();
     }
 
-    public static ResponseSpecification baseResponseSpecOK200() {
-        return baseResponse(200);
-    }
-
-    public static ResponseSpecification baseResponseError401() {
-        return baseResponse(401);
-    }
-
-    private static ResponseSpecification baseResponse(int statusCode) {
+    public static ResponseSpecification baseResponse(int statusCode) {
         return new ResponseSpecBuilder()
                 .expectStatusCode(statusCode)
                 .log(LogDetail.ALL)

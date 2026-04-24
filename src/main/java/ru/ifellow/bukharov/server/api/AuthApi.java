@@ -19,27 +19,19 @@ public class AuthApi extends BaseApi {
         super(BASE_URL);
     }
 
-    public ValidatableResponse register(UserDTO user) {
+    public ValidatableResponse postUserByUrn(UserDTO user, String urn) {
         return given()
                 .body(user)
                 .when()
-                .post("/register")
+                .post(urn)
                 .then();
     }
 
-    public ValidatableResponse login(UserDTO user) {
-        return given()
-                .body(user)
-                .when()
-                .post("/login")
-                .then();
-    }
-
-    public ValidatableResponse logout(UUID token) {
+    public ValidatableResponse logout(UUID token, String urn) {
         return given()
                 .header("Authorization", token.toString())
                 .when()
-                .get("/logout")
+                .get(urn)
                 .then();
     }
 }

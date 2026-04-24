@@ -1,8 +1,10 @@
 package ru.ifellow.bukharov.rickandmorty.step;
 
+import org.apache.http.HttpStatus;
 import ru.ifellow.bukharov.rickandmorty.api.CharacterApi;
 import ru.ifellow.bukharov.rickandmorty.dto.CharacterResponse;
-import ru.ifellow.bukharov.spec.Specification;
+
+import static ru.ifellow.bukharov.spec.Specification.baseResponse;
 
 public class CharacterSearchStep {
 
@@ -14,7 +16,7 @@ public class CharacterSearchStep {
 
     public CharacterResponse getCharacter(String name) {
         return api.getCharacterByName(name)
-                .spec(Specification.baseResponseSpecOK200())
+                .spec(baseResponse(HttpStatus.SC_OK))
                 .extract()
                 .as(CharacterResponse.class);
     }

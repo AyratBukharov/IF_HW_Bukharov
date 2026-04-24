@@ -1,33 +1,32 @@
 package ru.ifellow.bukharov.server.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.*;
+import org.aeonbits.owner.ConfigFactory;
+import org.apache.http.HttpStatus;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
+import ru.ifellow.bukharov.config.TestConfig;
+import ru.ifellow.bukharov.hooks.ServerHooks;
 import ru.ifellow.bukharov.server.dto.UserDTO;
-import ru.ifellow.bukharov.server.step.AuthSteps;
-import ru.ifellow.bukharov.spec.Specification;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.UUID;
 
 import static org.hamcrest.Matchers.equalTo;
+import static ru.ifellow.bukharov.server.enums.AuthMessage.*;
+import static ru.ifellow.bukharov.server.enums.AuthUrn.*;
+import static ru.ifellow.bukharov.spec.Specification.baseResponse;
 
 @Tag("DZ5")
 @Tag("auth")
-public class AuthTest {
+public class AuthTest extends ServerHooks {
 
-    private static AuthSteps authStep;
     private final ObjectMapper mapper = new ObjectMapper();
-    private final File userJson = new File("src/test/resources/user.json");
-    private static final String SUCCESS_REGISTER = "success register";
-    private static final String NOT_FOUND = "not found";
-    private static final String NOT_RIGHT_PASS = "not right pass";
-    private static final String SUCCESS_LOGOUT = "success logout";
-
-    @BeforeAll
-    static void setUp() {
-        authStep = new AuthSteps(new AuthApi());
-    }
+    private static final TestConfig config = ConfigFactory.create(TestConfig.class);
+    private final File userJson = config.jsonFile();
 
     @Test
     @Tag("negative")
@@ -36,9 +35,9 @@ public class AuthTest {
         UserDTO user = readUser();
         user.setUsername("bad_username");
 
-        authStep.login(user)
-                .spec(Specification.baseResponseError401())
-                .body(equalTo(NOT_FOUND));
+        authStep.login(user, LOGIN.getValue())
+                .spec(baseResponse(HttpStatus.SC_UNAUTHORIZED))
+                .body(equalTo(NOT_FOUND.getValue()));
     }
 
     @Test
@@ -48,9 +47,9 @@ public class AuthTest {
         UserDTO user = readUser();
         user.setPassword("bad_pass");
 
-        authStep.login(user)
-                .spec(Specification.baseResponseError401())
-                .body(equalTo(NOT_RIGHT_PASS));
+        authStep.login(user, LOGIN.getValue())
+                .spec(baseResponse(HttpStatus.SC_UNAUTHORIZED))
+                .body(equalTo(NOT_RIGHT_PASS.getValue()));
     }
 
     @Test
@@ -58,7 +57,7 @@ public class AuthTest {
     @DisplayName("Задача 2. Авторизация: успешный сценарий")
     void loginSuccess() {
         UserDTO user = createAndRegisterUser();
-        UUID token = authStep.loginAndExtractToken(user);
+        UUID token = authStep.loginAndExtractToken(user, LOGIN.getValue());
         Assertions.assertNotNull(token);
     }
 
@@ -66,9 +65,9 @@ public class AuthTest {
     @Tag("negative")
     @DisplayName("Задача 2. Выход из учётки: неуспешный сценарий")
     void logoutInvalidToken() {
-        authStep.logout(UUID.randomUUID())
-                .spec(Specification.baseResponseError401())
-                .body(equalTo(NOT_FOUND));
+        authStep.logout(UUID.randomUUID(), LOGOUT.getValue())
+                .spec(baseResponse(HttpStatus.SC_UNAUTHORIZED))
+                .body(equalTo(NOT_FOUND.getValue()));
     }
 
     @Test
@@ -76,18 +75,18 @@ public class AuthTest {
     @DisplayName("Задача 2. Выход из учётки: успешный сценарий")
     void logoutSuccess() {
         UserDTO user = createAndRegisterUser();
-        UUID token = authStep.loginAndExtractToken(user);
+        UUID token = authStep.loginAndExtractToken(user, LOGIN.getValue());
 
-        authStep.logout(token)
-                .spec(Specification.baseResponseSpecOK200())
-                .body(equalTo(SUCCESS_LOGOUT));
+        authStep.logout(token, LOGOUT.getValue())
+                .spec(baseResponse(HttpStatus.SC_OK))
+                .body(equalTo(SUCCESS_LOGOUT.getValue()));
     }
 
     private UserDTO createAndRegisterUser() {
         UserDTO user = readUser();
-        authStep.register(user)
-                .spec(Specification.baseResponseSpecOK200())
-                .body(equalTo(SUCCESS_REGISTER));
+        authStep.register(user, REGISTER.getValue())
+                .spec(baseResponse(HttpStatus.SC_OK))
+                .body(equalTo(SUCCESS_REGISTER.getValue()));
         return user;
     }
 
