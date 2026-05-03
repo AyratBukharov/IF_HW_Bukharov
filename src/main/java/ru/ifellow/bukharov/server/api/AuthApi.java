@@ -13,10 +13,9 @@ import static io.restassured.RestAssured.given;
 public class AuthApi extends BaseApi {
 
     private static final TestConfig config = ConfigFactory.create(TestConfig.class);
-    private static final String BASE_URL = config.baseUrlServer();
 
     public AuthApi() {
-        super(BASE_URL);
+        super(config.baseUrlServer());
     }
 
     public ValidatableResponse postUserByUrn(UserDTO user, String urn) {

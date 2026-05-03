@@ -10,29 +10,20 @@ import static io.restassured.RestAssured.given;
 public class CharacterApi extends BaseApi {
 
     private static final TestConfig config = ConfigFactory.create(TestConfig.class);
-    private static final String BASE_URL = config.baseUrlMorty();
-    private static final String URN = "/character";
 
     public CharacterApi() {
-        super(BASE_URL);
+        super(config.baseUrlMorty());
     }
 
     public ValidatableResponse getCharacterByName(String name) {
         return given()
                 .when()
                 .queryParam("name", name)
-                .get(URN)
+                .get(config.characterUrn())
                 .then();
     }
 
-    public ValidatableResponse getEpisodeByUrl(String url) {
-        return given()
-                .when()
-                .get(url)
-                .then();
-    }
-
-    public ValidatableResponse getCharacterByUrl(String url) {
+    public ValidatableResponse getByUrl(String url) {
         return given()
                 .when()
                 .get(url)
